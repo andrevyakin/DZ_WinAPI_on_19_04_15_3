@@ -4,6 +4,7 @@
 
 #include<Windows.h>
 #include<tchar.h>
+#include<string>
 
 #define ID_ListBox 1001
 #define ID_EditBox 1002
@@ -93,37 +94,55 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_CREATE:
+	{
+					  GetClientRect(hWnd, &cr);
 
-		GetClientRect(hWnd, &cr);
+					  ListBox = CreateWindowEx(
+						  WS_EX_CLIENTEDGE,
+						  L"listbox",
+						  L"",
+						  WS_CHILD | WS_VISIBLE | WS_VSCROLL,
+						  cr.right / 4,
+						  cr.bottom / 5,
+						  cr.right / 2,
+						  cr.bottom / 3,
+						  hWnd,
+						  (HMENU)ID_ListBox,
+						  hinst,
+						  NULL);
 
-		ListBox = CreateWindowEx(
-			WS_EX_CLIENTEDGE,
-			L"listbox",
-			L"",
-			WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | LBS_SORT,
-			cr.right / 4,
-			cr.bottom / 5,
-			cr.right / 2,
-			cr.bottom / 3,
-			hWnd,
-			(HMENU)ID_ListBox,
-			hinst,
-			NULL);
+					  EditBox = CreateWindowEx(
+						  WS_EX_CLIENTEDGE,
+						  L"edit",
+						  L"",
+						  WS_CHILD | WS_VISIBLE,
+						  cr.right / 4,
+						  cr.bottom / 5 * 3.5,
+						  cr.right / 2,
+						  20,
+						  hWnd,
+						  (HMENU)ID_EditBox,
+						  hinst,
+						  NULL);
 
-		EditBox = CreateWindowEx(
-			WS_EX_CLIENTEDGE,
-			L"edit",
-			L"",
-			WS_CHILD | WS_VISIBLE,
-			cr.right / 4,
-			cr.bottom /5 * 3.5,
-			cr.right / 2,
-			20,
-			hWnd,
-			(HMENU)ID_EditBox,
-			hinst,
-			NULL);
+					  std::wstring Agatha_Christie[10] =
+					  {
+						  L"Я на тебе, как на войне,",
+						  L"а на войне, как на тебе,",
+						  L"Но я устал, окончен бой,",
+						  L"беру портвейн, иду домой.",
+						  L"                         ",
+						  L"Окончен бой, зачах огонь,",
+						  L"и не осталось ничего.",
+						  L"А мы живём, а нам с тобою повезло",
+						  L"назло.",
+						  L"(c) \"Агата Кристи\""
+					  };
 
+					  for (int i = 0; i < 10; i++)
+						  SendMessage(ListBox, LB_ADDSTRING, 0, (LPARAM)Agatha_Christie[i].c_str());
+
+	}
 		Button = CreateWindowEx(
 			WS_EX_CLIENTEDGE,
 			L"button",
