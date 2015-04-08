@@ -90,6 +90,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 
 	case BN_CLICKED:
+		if (LOWORD(wParam) == ID_Button)
+		{
+			wchar_t str [100];
+			SendMessage(EditBox, WM_GETTEXT, sizeof(str), (LPARAM)str);
+			auto count = SendMessage(ListBox, LB_FINDSTRING, -1, (LPARAM) str);
+			wchar_t num [10];
+			_itow_s(count, num, 10);
+			MessageBox(hWnd, num, L"", TRUE);
+		}
 
 		break;
 
@@ -142,22 +151,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					  for (int i = 0; i < 10; i++)
 						  SendMessage(ListBox, LB_ADDSTRING, 0, (LPARAM)Agatha_Christie[i].c_str());
 
+					  Button = CreateWindowEx(
+						  WS_EX_CLIENTEDGE,
+						  L"button",
+						  L"Найти",
+						  WS_CHILD | WS_VISIBLE,
+						  cr.right / 2 - 8 * 6,
+						  cr.bottom - 50,
+						  80,
+						  30,
+						  hWnd,
+						  (HMENU)ID_Button,
+						  hinst, NULL);
+
+					  break;
 	}
-		Button = CreateWindowEx(
-			WS_EX_CLIENTEDGE,
-			L"button",
-			L"Найти",
-			WS_CHILD | WS_VISIBLE,
-			cr.right / 2 - 8 * 6,
-			cr.bottom - 50,
-			80,
-			30,
-			hWnd,
-			(HMENU)ID_Button,
-			hinst, NULL);
-
-		break;
-
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
