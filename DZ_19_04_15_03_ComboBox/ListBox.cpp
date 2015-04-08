@@ -94,10 +94,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			wchar_t str [100];
 			SendMessage(EditBox, WM_GETTEXT, sizeof(str), (LPARAM)str);
-			auto count = SendMessage(ListBox, LB_FINDSTRING, -1, (LPARAM) str);
-			wchar_t num [10];
-			_itow_s(count, num, 10);
-			MessageBox(hWnd, num, L"", TRUE);
+			errno_t res = SendMessage(ListBox, LB_FINDSTRING, -1, (LPARAM) str);
+			if (res == LB_ERR)
+				MessageBox(hWnd, L"Строка не найдена.", L"", MB_OK);
+			else
+			{
+				wchar_t num[20];
+				_itow_s(res + 1, num, 10);
+				wcscat_s(num, L"-я строка.");
+				MessageBox(hWnd, num, L"", MB_OK);
+			}
 		}
 
 		break;
@@ -145,7 +151,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						  L"и не осталось ничего.",
 						  L"А мы живём, а нам с тобою повезло",
 						  L"назло.",
-						  L"(c) \"Агата Кристи\""
+						  L"           (c) \"Агата Кристи\" 1993 г."
 					  };
 
 					  for (int i = 0; i < 10; i++)
