@@ -5,10 +5,15 @@
 #include<Windows.h>
 #include<tchar.h>
 
+#define ID_ListBox 1001
+#define ID_EditBox 1002
+#define ID_Button 1003
+
 static TCHAR WindowsClass[] = L"win32app";
 static TCHAR Title[] = L"MyApp";
 HINSTANCE hinst;
-RECT desktop;
+RECT desktop, cr;
+HWND ListBox, EditBox, Button;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -28,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	wcex.hIcon = LoadIcon(hinstance, MAKEINTRESOURCE(IDI_APPLICATION));
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	/*wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);*/
-	wcex.hbrBackground = CreateSolidBrush(RGB(150, 70, 150));
+	wcex.hbrBackground = CreateSolidBrush(RGB(10, 128, 256));
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = WindowsClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
@@ -88,6 +93,49 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_CREATE:
+
+		GetClientRect(hWnd, &cr);
+
+		ListBox = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
+			L"listbox",
+			L"",
+			WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | LBS_SORT,
+			cr.right / 4,
+			cr.bottom / 5,
+			cr.right / 2,
+			cr.bottom / 3,
+			hWnd,
+			(HMENU)ID_ListBox,
+			hinst,
+			NULL);
+
+		EditBox = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
+			L"edit",
+			L"",
+			WS_CHILD | WS_VISIBLE,
+			cr.right / 4,
+			cr.bottom /5 * 3.5,
+			cr.right / 2,
+			20,
+			hWnd,
+			(HMENU)ID_EditBox,
+			hinst,
+			NULL);
+
+		Button = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
+			L"button",
+			L"Найти",
+			WS_CHILD | WS_VISIBLE,
+			cr.right / 2 - 8 * 6,
+			cr.bottom - 50,
+			80,
+			30,
+			hWnd,
+			(HMENU)ID_Button,
+			hinst, NULL);
 
 		break;
 
